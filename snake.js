@@ -27,7 +27,6 @@ class Snake {
         if (this.velQueue.length) this.vel = toVector(this.velQueue.shift());
 
         let a = String(this.vel.x) + String(this.vel.y) + String(lastVel.x) + String(lastVel.y);
-        console.log(a);
         let textureID = this.velToTexID[a];
         if (!(a in this.velToTexID)) textureID = 6;
 
@@ -58,17 +57,21 @@ class Snake {
     }
 
     draw() {
-        context.fillStyle = "#99ff99";
-        let textureID = this.vel.x !== 0 ? 5 : 4
+        let headTexture = 4;
+        if (this.vel.y === -1) headTexture = 0;
+        if (this.vel.x === 1) headTexture = 1;
+        if (this.vel.y === 1) headTexture = 2;
+        if (this.vel.x === -1) headTexture = 3;
+
         context.drawImage(
-            textures[textureID],
+            headTextures[headTexture],
             this.pos.x * Config.tileSize,
             this.pos.y * Config.tileSize
         );
 
         this.tail.forEach(tailPiece => {
             context.drawImage(
-                textures[tailPiece.textureID],
+                tailTextures[tailPiece.textureID],
                 tailPiece.x * Config.tileSize,
                 tailPiece.y * Config.tileSize
             );
