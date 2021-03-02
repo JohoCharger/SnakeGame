@@ -4,7 +4,9 @@ const context = canvas.getContext("2d");
 let tailTextures = [];
 let headTextures = [];
 let backgroundTexture;
+let appleTexture;
 let snake;
+let apple;
 
 function toVector(vectorOrX, y=undefined) {
     if (y !== undefined) {
@@ -125,6 +127,20 @@ function initializeTextures() {
             );
         }
     }
+
+    appleTexture = document.createElement("canvas");
+    appleTexture.width = Config.tileSize;
+    appleTexture.height = Config.tileSize;
+    ctx = appleTexture.getContext("2d");
+    ctx.fillStyle = "#ff0000";
+    ctx.beginPath();
+    ctx.arc(
+        Config.tileSize / 2,
+        Config.tileSize / 2,
+        Config.tileSize / 2 - Config.snakeGap / 2,
+        0, Math.PI * 2
+    )
+    ctx.fill();
 }
 
 window.onload = function initialize() {
@@ -135,12 +151,41 @@ window.onload = function initialize() {
     initializeTextures();
 
     snake = new Snake();
+    apple = {
+        x: 0,
+        y: 0,
+        draw: function() {
+            context.drawImage(
+                appleTexture,
+                this.x * Config.tileSize,
+                this.y * Config.tileSize
+            );
+        },
+        spawn: function() {
+            let positions = [];
+            for (let i = 0; i < Config.tileCount; i++) {
+                for (let j = 0; j < Config.tileCount; j++) {
+                    if (snake.collides(i, j)) continue;
+                    positions.push(toVector(i, j));
+                }
+            }
+            positions.forEach(pos => {
+            });
+            let selected = positions[Math.floor(Math.random() * positions.length)];
+            this.x = selected.x;
+            this.y = selected.y;
+        }
+
+    }
+    apple.spawn();
     draw();
 
     window.addEventListener("keydown", function keydown(event) {
         snake.handleInput(event.code)
         if (event.code === "KeyP" && !event.repeat) {
             running = !running;
+        } else if (event.code === "KeyS" && !event.repeat) {
+            apple.spawn();
         }
     });
 
@@ -170,11 +215,15 @@ function game(time=performance.now()) {
 }
 
 function update(deltaTime) {
+    if (snake.headCollides(apple.x, apple.y)){
+        snake.grow();
+        apple.spawn();
+    }
     snake.update();
 }
 
 function draw() {
     context.drawImage(backgroundTexture, 0, 0);
-
+    apple.draw();
     snake.draw();
 }

@@ -88,4 +88,20 @@ class Snake {
             );
         });
     }
+
+    headCollides(x, y) {
+        return this.pos.x === x && this.pos.y === y;
+    }
+
+    collides(x, y) {
+        if (this.pos.x === x && this.pos.y === y) return true;
+        for (let i = 0; i < this.tail.length; i++) {
+            if (this.tail[i].x === x && this.tail[i].y === y) return true;
+        }
+        return false;
+    }
+
+    grow() {
+        this.trueLength++;
+    }
 }
