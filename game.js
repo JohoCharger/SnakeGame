@@ -3,10 +3,11 @@ const context = canvas.getContext("2d");
 
 let tailTextures = [];
 let headTextures = [];
+let backgroundTexture;
 let snake;
 
-function toVector(vectorOrX, y) {
-    if (y) {
+function toVector(vectorOrX, y=undefined) {
+    if (y !== undefined) {
         return {x: vectorOrX, y: y};
     } else {
         return {x: vectorOrX.x, y: vectorOrX.y};
@@ -105,14 +106,33 @@ function initializeTextures() {
         createRotatedContext(head, 3),
         errorSquare
     ];
+
+    backgroundTexture = document.createElement("canvas");
+    backgroundTexture.width = canvas.width;
+    backgroundTexture.height = canvas.height;
+    ctx = backgroundTexture.getContext("2d");
+    let color = Config.bgColor1;
+    for (let i = 0; i < Config.tileCount; i++) {
+        color = color === Config.bgColor1 ? Config.bgColor2 : Config.bgColor1;
+        for (let j = 0; j < Config.tileCount; j++) {
+            color = color === Config.bgColor1 ? Config.bgColor2 : Config.bgColor1;
+            ctx.fillStyle = color;
+            ctx.fillRect(
+                i * Config.tileSize,
+                j * Config.tileSize,
+                Config.tileSize,
+                Config.tileSize
+            );
+        }
+    }
 }
 
 window.onload = function initialize() {
-    initializeTextures();
-
     canvas.width = Config.tileCount * Config.tileSize
     canvas.height = Config.tileCount * Config.tileSize
     canvas.focus();
+
+    initializeTextures();
 
     snake = new Snake();
     draw();
@@ -154,8 +174,7 @@ function update(deltaTime) {
 }
 
 function draw() {
-    context.fillStyle = "#000000";
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(backgroundTexture, 0, 0);
 
     snake.draw();
 }

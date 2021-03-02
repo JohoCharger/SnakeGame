@@ -46,14 +46,25 @@ class Snake {
     handleInput(code) {
         let previousVel = this.velQueue.length ? toVector(this.velQueue[0]) : toVector(this.vel)
         if (code === "ArrowLeft" && previousVel.x === 0) {
-            this.velQueue.push({x: -1, y: 0});
+            this.queueInput(-1, 0);
         } else if (code === "ArrowRight" && previousVel.x === 0) {
-            this.velQueue.push({x: 1, y: 0});
+            this.queueInput(1, 0);
         } else if (code === "ArrowUp" && previousVel.y === 0) {
-            this.velQueue.push({x: 0, y: -1});
+            this.queueInput(0, -1);
         } else if (code === "ArrowDown" && previousVel.y === 0) {
-            this.velQueue.push({x: 0, y: 1});
+            this.queueInput(0, 1);
         }
+    }
+
+    queueInput(x, y) {
+        if (this.velQueue.length === 0) {
+            if (x === this.vel.x || y === this.vel.y)
+                return;
+            else this.velQueue.push(toVector(x, y));
+        }
+        let lastInput = this.velQueue[this.velQueue.length - 1]; //TODO
+        if (x === lastInput.x || y === lastInput.y) return;
+        this.velQueue.push(toVector(x, y));
     }
 
     draw() {
