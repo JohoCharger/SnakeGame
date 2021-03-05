@@ -1,10 +1,12 @@
 class Snake {
-    constructor(x, y) {
+    constructor(game, x, y) {
+        this.game = game;
         this.vel = {x: 0, y: 0};
         this.velQueue = [];
         this.pos = {x: x, y: y};
         this.trueLength = 5; //TODO: More descriptive name??
         this.tail = [];
+
 
         this.velToTexID = {
             "-10-10": 5,
@@ -19,21 +21,26 @@ class Snake {
             "0-1-10": 3,
             "0110": 1,
             "100-1": 0,
-            "0000": 5
+            "0000": 4,
+            "1000": 5,
+            "-1000": 5,
+            "0100": 4,
+            "0-100": 4
         };
     }
 
     update() {
-        let lastVel = toVector(this.vel);
-        if (this.velQueue.length) this.vel = toVector(this.velQueue.shift());
+        let lastVel = this.game.toVector(this.vel);
+        if (this.velQueue.length) this.vel = this.game.toVector(this.velQueue.shift());
 
         let a = String(this.vel.x) + String(this.vel.y) + String(lastVel.x) + String(lastVel.y);
+        console.log(a);
         let textureID = this.velToTexID[a];
         if (!(a in this.velToTexID)) textureID = 6;
 
         for (let i = 0; i < this.tail.length; i++) {
             if (this.headCollides(this.tail[i].x, this.tail[i].y)) {
-                running = false;
+                this.game.running = false;
                 return;
             }
         }
@@ -43,54 +50,65 @@ class Snake {
             y: this.pos.y,
             textureID: textureID
         });
+
         this.pos.x += this.vel.x;
         this.pos.y += this.vel.y;
 
         if (this.tail.length === this.trueLength) {
-            this.tail.pop()
+            this.tail.pop();
         }
     }
 
     handleInput(code) {
-        let previousVel = this.velQueue.length ? toVector(this.velQueue[0]) : toVector(this.vel)
-        if (code === "ArrowLeft" && previousVel.x === 0) {
+        if (code === "ArrowLeft") {
             this.queueInput(-1, 0);
-        } else if (code === "ArrowRight" && previousVel.x === 0) {
+        } else if (code === "ArrowRight") {
             this.queueInput(1, 0);
-        } else if (code === "ArrowUp" && previousVel.y === 0) {
+        } else if (code === "ArrowUp") {
             this.queueInput(0, -1);
-        } else if (code === "ArrowDown" && previousVel.y === 0) {
+        } else if (code === "ArrowDown") {
             this.queueInput(0, 1);
         }
     }
 
     queueInput(x, y) {
+        if (this.vel.x === 0 && this.vel.y === 0) {
+            this.velQueue.push(this.game.toVector(x, y));
+            return;
+        }
         if (this.velQueue.length === 0) {
             if (x === this.vel.x || y === this.vel.y)
                 return;
-            else this.velQueue.push(toVector(x, y));
+            else this.velQueue.push(this.game.toVector(x, y));
         }
-        let lastInput = this.velQueue[this.velQueue.length - 1]; //TODO
+        let lastInput = this.velQueue[this.velQueue.length - 1];
         if (x === lastInput.x || y === lastInput.y) return;
-        this.velQueue.push(toVector(x, y));
+        this.velQueue.push(this.game.toVector(x, y));
     }
 
     draw() {
         let headTexture = 4;
-        if (this.vel.y === -1) headTexture = 0;
-        if (this.vel.x === 1) headTexture = 1;
-        if (this.vel.y === 1) headTexture = 2;
-        if (this.vel.x === -1) headTexture = 3;
+        if (this.vel.y === -1) {
+            headTexture = 0;
+        } else if (this.vel.x === 1) {
+            headTexture = 1;
+        } else if (this.vel.y === 1) {
+            headTexture = 2;
+        } else if (this.vel.x === -1) {
+            headTexture = 3;
+        } else if (this.vel.x === 0 && this.vel.y === 0) {
+            headTexture = 0;
+        }
 
-        context.drawImage(
-            headTextures[headTexture],
+        this.game.context.drawImage(
+            this.game.headTextures[headTexture],
             this.pos.x * Config.tileSize,
             this.pos.y * Config.tileSize
         );
 
         this.tail.forEach(tailPiece => {
-            context.drawImage(
-                tailTextures[tailPiece.textureID],
+            this.game.context.drawImage(
+                this.game.tailTextures[tailPiece.textureID],
                 tailPiece.x * Config.tileSize,
                 tailPiece.y * Config.tileSize
             );
