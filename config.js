@@ -1,6 +1,6 @@
 const Config = {
     tileSize: 32,
-    tileCount: 20,
+    tileCount: 15,
     snakeGap: 5, //TODO: More descriptive name??
     snakeColor: "#8888ff",
     bgColor1: "#66ff66",

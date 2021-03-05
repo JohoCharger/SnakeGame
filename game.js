@@ -115,7 +115,9 @@ function initializeTextures() {
     ctx = backgroundTexture.getContext("2d");
     let color = Config.bgColor1;
     for (let i = 0; i < Config.tileCount; i++) {
-        color = color === Config.bgColor1 ? Config.bgColor2 : Config.bgColor1;
+        if (Config.tileCount % 2 === 0) {
+            color = color === Config.bgColor1 ? Config.bgColor2 : Config.bgColor1;
+        }
         for (let j = 0; j < Config.tileCount; j++) {
             color = color === Config.bgColor1 ? Config.bgColor2 : Config.bgColor1;
             ctx.fillStyle = color;
@@ -150,7 +152,7 @@ window.onload = function initialize() {
 
     initializeTextures();
 
-    snake = new Snake();
+    snake = new Snake(Math.floor(Config.tileCount / 2),Config.tileCount - 2);
     apple = {
         x: 0,
         y: 0,
@@ -189,7 +191,7 @@ window.onload = function initialize() {
         }
     });
 
-    Config.setFPS(8);
+    Config.setFPS(7);
     lastTime = performance.now();
     game();
 }
@@ -204,7 +206,7 @@ function game(time=performance.now()) {
     if (running) {
         accumulator += deltaTime;
         if (accumulator >= Config.frameTime) {
-            while (accumulator >= Config.frameTime) {
+            while (accumulator >= Config.frameTime && running) {
                 accumulator -= Config.frameTime;
                 update(deltaTime);
             }
@@ -215,11 +217,11 @@ function game(time=performance.now()) {
 }
 
 function update(deltaTime) {
+    snake.update();
     if (snake.headCollides(apple.x, apple.y)){
         snake.grow();
         apple.spawn();
     }
-    snake.update();
 }
 
 function draw() {

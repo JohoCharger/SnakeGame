@@ -1,9 +1,9 @@
 class Snake {
-    constructor() {
-        this.vel = {x: 0, y: -1};
+    constructor(x, y) {
+        this.vel = {x: 0, y: 0};
         this.velQueue = [];
-        this.pos = {x: 10, y: 17};
-        this.trueLength = 10; //TODO: More descriptive name??
+        this.pos = {x: x, y: y};
+        this.trueLength = 5; //TODO: More descriptive name??
         this.tail = [];
 
         this.velToTexID = {
@@ -19,6 +19,7 @@ class Snake {
             "0-1-10": 3,
             "0110": 1,
             "100-1": 0,
+            "0000": 5
         };
     }
 
@@ -29,6 +30,13 @@ class Snake {
         let a = String(this.vel.x) + String(this.vel.y) + String(lastVel.x) + String(lastVel.y);
         let textureID = this.velToTexID[a];
         if (!(a in this.velToTexID)) textureID = 6;
+
+        for (let i = 0; i < this.tail.length; i++) {
+            if (this.headCollides(this.tail[i].x, this.tail[i].y)) {
+                running = false;
+                return;
+            }
+        }
 
         this.tail.unshift({
             x: this.pos.x,
