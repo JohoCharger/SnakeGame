@@ -38,13 +38,6 @@ class Snake {
         let textureID = this.velToTexID[a];
         if (!(a in this.velToTexID)) textureID = 6;
 
-        for (let i = 0; i < this.tail.length; i++) {
-            if (this.headCollides(this.tail[i].x, this.tail[i].y)) {
-                this.game.running = false;
-                return;
-            }
-        }
-
         this.tail.unshift({
             x: this.pos.x,
             y: this.pos.y,
@@ -125,6 +118,19 @@ class Snake {
             if (this.tail[i].x === x && this.tail[i].y === y) return true;
         }
         return false;
+    }
+
+    collidesBorderOrSelf() {
+        if (this.pos.x === -1 ||
+            this.pos.y === -1 ||
+            this.pos.x === Config.tileCount ||
+            this.pos.y === Config.tileCount
+        ) return true;
+        for (let i = 0; i < this.tail.length; i++) {
+            if (this.headCollides(this.tail[i].x, this.tail[i].y)) {
+                return true;
+            }
+        }
     }
 
     grow() {

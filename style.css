@@ -1,9 +1,31 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Rubik', sans-serif;
 }
 
-#cs {
-    border: 5px #000000 solid;
+#game-canvas {
+    border: 5px #999999 solid;
+    border-radius: 5px;
+}
 
+.main {
+    text-align: center;
+    height: 100vh;
+    background: #c4fff7;
+}
+
+.canvas-container {
+    margin-top: 5%;
+    display: inline-block;
+}
+
+.score-counter {
+    font-size: 6vh;
+    text-align: center;
+    color: #999999;
+}
+
+.score-counter-container {
+    padding-top: 5%;
 }

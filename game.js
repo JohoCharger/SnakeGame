@@ -1,6 +1,6 @@
 class Game {
     constructor() {
-        this.canvas = document.querySelector("#cs");
+        this.canvas = document.querySelector("#game-canvas");
         this.context = this.canvas.getContext("2d");
         this.tailTextures = [];
         this.headTextures = [];
@@ -202,6 +202,9 @@ class Game {
 
     update(deltaTime) {
         this.snake.update();
+        if (this.snake.collidesBorderOrSelf()) {
+            this.running = false;
+        }
         if (this.snake.headCollides(this.apple.x, this.apple.y)) {
             this.snake.grow();
             this.apple.spawn();
@@ -212,5 +215,9 @@ class Game {
         this.context.drawImage(this.backgroundTexture, 0, 0);
         this.apple.draw();
         this.snake.draw();
+    }
+
+    getScore() {
+        return this.snake.trueLength;
     }
 }

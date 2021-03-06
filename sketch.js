@@ -1,3 +1,5 @@
+const scoreCounter = document.querySelector(".score-counter");
+
 let game = new Game();
 game.initialize();
 
@@ -25,6 +27,7 @@ function run(time=performance.now()) {
                 accumulator -= Config.frameTime;
                 game.update(deltaTime);
             }
+            scoreCounter.textContent = String(game.getScore());
             game.draw();
         }
     }
