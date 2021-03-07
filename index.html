@@ -32,5 +32,19 @@
 	<p id="game-over-score-display">Final score: 0</p>
 	<button class="restart-button" onclick="start()">Restart</button>
 </template>
+<template id="highscore-submit-template">
+	<p id="highscore-text">You hit a highscore!</p>
+	<p id="lower-highscore-text">Give us your name and a short message.</p>
+	<form method="post" action="/api/scores">
+		<label class="form-label" for="name">Name:</label><br/>
+		<input name="name" autofocus maxlength="30" class="highscore-name-input" type="text" id="name"><br/>
+		<label class="form-label" for="message">Message:</label><br/>
+		<textarea name="message" maxlength="150" class="highscore-message-input" rows="4" cols="30"
+				  id="message"></textarea><br/>
+		<label for="score"></label>
+		<input name="score" readonly id="score" style="display:none">
+		<input class="submit-button" type="submit" value="Submit">
+	</form>
+</template>
 </body>
 </html>

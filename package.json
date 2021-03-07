@@ -4,7 +4,7 @@
   "description": "Snake game with leaderboards",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js --ignore highscores.json"
   },
   "repository": {
     "type": "git",

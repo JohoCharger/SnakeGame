@@ -58,7 +58,24 @@
     margin: 2vh;
 }
 
-#game-over-text {
+#game-over-text, #highscore-text {
     font-size: 5vh;
     margin: 1vh;
+}
+
+#lower-highscore-text {
+    margin: 1vh;
+}
+
+.highscore-message-input, .highscore-name-input, .submit-button {
+    resize: none;
+    font-family: 'Rubik', sans-serif;
+    margin: 1vh;
+    padding: 1vh;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.submit-button {
+padding: 2vh 4vh;
 }

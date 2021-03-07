@@ -42,14 +42,9 @@ function gameOver() {
     setMessageBoxContents("#game-over-template");
     messageBox.querySelector("#game-over-score-display")
         .textContent = `Final score: ${game.getScore()}`;
+    setMessageBoxContents("#highscore-submit-template");
+    messageBox.querySelector("#score").value = game.getScore();
     showMessageBox();
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/scores", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-        score: game.getScore()
-    }));
 }
 
 function firstKeystrokeListener(event) {

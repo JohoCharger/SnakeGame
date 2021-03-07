@@ -10,21 +10,18 @@ const PORT = 3000;
 const highscoreService = new HighscoreService("highscores.json");
 
 app.use(express.static(path.join(__dirname, "./static")));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get("/", (request, response) => {
     response.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.post("/scores", async (request, response) => {
-    console.log(`post request received. Score: ${ request.body.score }`);
-    const data = await highscoreService.getData();
-    data.push(request.body.score);
-    await highscoreService.setData(data);
+app.post("/api/scores", async (request, response) => {
     response.status(204).end();
 });
 
-app.get("/scores", async (request, response) => {
+app.get("/api/scores", async (request, response) => {
     response.send(await highscoreService.getData());
 });
 
