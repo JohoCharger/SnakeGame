@@ -5,8 +5,8 @@
 }
 
 :root {
-    --color-primary: rgba(101,175,191,1);
-    --color-secondary: rgba(242,217,141,1);
+    --color-primary: rgba(206,164,219,1);
+    --color-secondary: rgba(219,121,86,1);
     --border-color: #666;
 }
 
@@ -42,7 +42,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background: linear-gradient(180deg, rgba(101,175,191,1) 0%, rgba(242,217,141,1) 100%);
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     box-shadow: 5px 5px 5px #555;
     opacity: 0.8;
     padding: 20px;

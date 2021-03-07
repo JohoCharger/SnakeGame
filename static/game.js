@@ -70,7 +70,7 @@ class Game {
         errorSquare.width = Config.tileSize;
         errorSquare.height = Config.tileSize;
         ctx = errorSquare.getContext("2d");
-        ctx.fillStyle = "#ff0000";
+        ctx.fillStyle = "#FF0000";
         ctx.fillRect(0, 0, Config.tileSize, Config.tileSize);
 
         const corner = this.createCornerBuffer();
@@ -137,7 +137,7 @@ class Game {
         this.appleTexture.width = Config.tileSize;
         this.appleTexture.height = Config.tileSize;
         ctx = this.appleTexture.getContext("2d");
-        ctx.fillStyle = "#ff0000";
+        ctx.fillStyle = "#DB8979";
         ctx.beginPath();
         ctx.arc(
             Config.tileSize / 2,

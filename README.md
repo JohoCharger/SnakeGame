@@ -1,2 +1,2 @@
 # SnakeGame
-A very simple and backend based focused project with leaderboards.
+A very simple and backend focused project with leaderboards.
