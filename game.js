@@ -193,11 +193,6 @@ class Game {
 
     handleInput(event) {
         this.snake.handleInput(event.code)
-        if (event.code === "KeyP" && !event.repeat) {
-            this.running = !this.running;
-        } else if (event.code === "KeyS" && !event.repeat) {
-            this.apple.spawn();
-        }
     }
 
     update(deltaTime) {

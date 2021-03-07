@@ -13,6 +13,9 @@
 </head>
 <body>
 <div class="main">
+	<div class="message-box">
+		<p>This is a message box.</p>
+	</div>
 	<div class="score-counter-container">
 		<p class="score-counter">0</p>
 	</div>
@@ -20,5 +23,14 @@
 		<canvas id="game-canvas"></canvas>
 	</div>
 </div>
+<template id="instructions-template">
+	<p>Move using WASD or the arrow keys</p>
+	<p>Swipe controls are not supported yet.</p>
+</template>
+<template id="game-over-template">
+	<p id="game-over-text">Game over!</p>
+	<p id="game-over-score-display">Final score: 0</p>
+	<button class="restart-button" onclick="start()">Restart</button>
+</template>
 </body>
 </html>

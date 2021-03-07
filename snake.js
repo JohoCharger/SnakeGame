@@ -34,7 +34,6 @@ class Snake {
         if (this.velQueue.length) this.vel = this.game.toVector(this.velQueue.shift());
 
         let a = String(this.vel.x) + String(this.vel.y) + String(lastVel.x) + String(lastVel.y);
-        console.log(a);
         let textureID = this.velToTexID[a];
         if (!(a in this.velToTexID)) textureID = 6;
 
@@ -53,13 +52,13 @@ class Snake {
     }
 
     handleInput(code) {
-        if (code === "ArrowLeft") {
+        if (code === "ArrowLeft" || code === "KeyA") {
             this.queueInput(-1, 0);
-        } else if (code === "ArrowRight") {
+        } else if (code === "ArrowRight" || code === "KeyD") {
             this.queueInput(1, 0);
-        } else if (code === "ArrowUp") {
+        } else if (code === "ArrowUp" || code === "KeyW") {
             this.queueInput(0, -1);
-        } else if (code === "ArrowDown") {
+        } else if (code === "ArrowDown" || code === "KeyS") {
             this.queueInput(0, 1);
         }
     }

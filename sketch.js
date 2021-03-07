@@ -1,8 +1,7 @@
-const scoreCounter = document.querySelector(".score-counter");
+const scoreCounter = document.querySelector(".score-counter"); //TODO: Color scheme??
+const messageBox = document.querySelector(".message-box");
 
-let game = new Game();
-game.initialize();
-
+let game;
 let keyboardListener;
 
 function bindKeyboard() {
@@ -30,8 +29,20 @@ function run(time=performance.now()) {
             scoreCounter.textContent = String(game.getScore());
             game.draw();
         }
+    } else {
+        gameOver();
+        return;
     }
+
     requestAnimationFrame(run);
+}
+
+function gameOver() {
+    unbindKeyboard();
+    setMessageBoxContents("#game-over-template");
+    messageBox.querySelector("#game-over-score-display")
+        .textContent = `Final score: ${game.getScore()}`;
+    showMessageBox();
 }
 
 function firstKeystrokeListener(event) {
@@ -39,9 +50,14 @@ function firstKeystrokeListener(event) {
     if (code !== "ArrowUp" &&
         code !== "ArrowDown" &&
         code !== "ArrowLeft" &&
-        code !== "ArrowRight"
+        code !== "ArrowRight" &&
+        code !== "KeyW" &&
+        code !== "KeyS" &&
+        code !== "KeyA" &&
+        code !== "KeyD"
     ) return;
 
+    hideMessageBox();
     window.removeEventListener("keydown", firstKeystrokeListener);
     bindKeyboard();
     game.handleInput(event);
@@ -50,6 +66,28 @@ function firstKeystrokeListener(event) {
     run();
 }
 
-window.onload = function start() {
-    window.addEventListener("keydown", firstKeystrokeListener);
+function hideMessageBox() {
+    messageBox.style.display = "none";
 }
+
+function showMessageBox() {
+    messageBox.style.display = "block";
+}
+
+function setMessageBoxContents(templateID) {
+    let templateContents = document.querySelector(templateID);
+    messageBox.innerHTML = "";
+    messageBox.appendChild(templateContents.content.cloneNode(true));
+}
+
+function start() {
+    game = new Game();
+    game.initialize();
+
+    setMessageBoxContents("#instructions-template");
+    showMessageBox();
+    window.addEventListener("keydown", firstKeystrokeListener);
+
+}
+
+window.onload = start;
