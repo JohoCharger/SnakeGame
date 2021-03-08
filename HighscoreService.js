@@ -10,7 +10,7 @@ class HighscoreService {
     }
 
     async setData(data) {
-        await writeFile(this.dataFile, JSON.stringify(data));
+        await writeFile(this.dataFile, JSON.stringify(data, null, 4));
     }
 
     async getData() {
@@ -30,8 +30,6 @@ class HighscoreService {
         if (data.length > 5) data.pop();
         await this.setData(data);
     }
-
-
 }
 
 module.exports = HighscoreService;

@@ -1,0 +1,29 @@
+.leaderboard {
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    position: absolute;
+}
+
+.leader {
+    height: 40vh;
+}
+
+.not-leader {
+    height: 20vh;
+}
+
+.leaderboard-col {
+}
+
+.leaderboard-item {
+    width: 95%;
+    height: 95%;
+    margin: auto;
+    border: var(--border-color) 2px solid;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #555;
+    background: linear-gradient(0deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
