@@ -19,6 +19,18 @@ class HighscoreService {
         return JSON.parse(data);
     }
 
+    async setNewHighscore(highscore) {
+        const data = await this.getData();
+        for (let i = 0; i < data.length; i++) {
+            if (highscore.score > data[i].score) {
+                data.splice(i, 0, highscore);
+                break;
+            }
+        }
+        if (data.length > 5) data.pop();
+        await this.setData(data);
+    }
+
 
 }
 

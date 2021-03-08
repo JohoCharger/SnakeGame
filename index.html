@@ -30,12 +30,12 @@
 <template id="game-over-template">
 	<p id="game-over-text">Game over!</p>
 	<p id="game-over-score-display">Final score: 0</p>
-	<button class="restart-button" onclick="start()">Restart</button>
+	<button class="restart-button">Restart</button>
 </template>
 <template id="highscore-submit-template">
 	<p id="highscore-text">You hit a highscore!</p>
 	<p id="lower-highscore-text">Give us your name and a short message.</p>
-	<form method="post" action="/api/scores">
+	<form method="post" action="/api/highscores">
 		<label class="form-label" for="name">Name:</label><br/>
 		<input name="name" autofocus maxlength="30" class="highscore-name-input" type="text" id="name"><br/>
 		<label class="form-label" for="message">Message:</label><br/>

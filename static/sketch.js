@@ -39,12 +39,27 @@ function run(time=performance.now()) {
 
 function gameOver() {
     unbindKeyboard();
-    setMessageBoxContents("#game-over-template");
-    messageBox.querySelector("#game-over-score-display")
-        .textContent = `Final score: ${game.getScore()}`;
-    setMessageBoxContents("#highscore-submit-template");
-    messageBox.querySelector("#score").value = game.getScore();
-    showMessageBox();
+
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 204) {
+                setMessageBoxContents("#game-over-template");
+                messageBox.querySelector("#game-over-score-display")
+                    .textContent = `Final score: ${game.getScore()}`;
+                messageBox.querySelector(".restart-button").onclick = start;
+
+                showMessageBox();
+            } else if (xhr.status === 200) {
+                setMessageBoxContents("#highscore-submit-template");
+                messageBox.querySelector("#score").value = game.getScore();
+                showMessageBox();
+            }
+        }
+    }
+    xhr.open("POST", "/api/scores", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(`score=${game.getScore()}`);
 }
 
 function firstKeystrokeListener(event) {
