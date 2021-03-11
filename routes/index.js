@@ -8,7 +8,7 @@ module.exports = (params) => {
     const { highscoreService } = params;
 
     router.get("/", (request, response) => {
-        response.sendFile(path.join(__dirname, "../game.html"));
+        response.sendFile(path.join(__dirname, "../views/game.html"));
     });
 
     router.post("/api/scores", async (request, response) => {
