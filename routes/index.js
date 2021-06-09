@@ -1,5 +1,5 @@
 const express = require("express");
-const path = require("path");
+const crypto = require("crypto");
 const leaderboardRoute = require("./leaderboard");
 
 const router = express.Router();
@@ -8,7 +8,19 @@ module.exports = (params) => {
     const { highscoreService } = params;
 
     router.get("/", (request, response) => {
-        response.sendFile(path.join(__dirname, "../views/game.html"));
+
+        let nonce = crypto.randomBytes(16).toString("base64");
+
+        //Ugly code to remove old 'script-src' policy and add new one with a nonce
+        let csp = response.get("Content-Security-Policy");
+        let policies = csp.split(";")
+        policies = policies.filter(policy => { return !policy.startsWith("script-src"); });
+        csp = policies.join(";");
+        csp = `script-src 'self' 'nonce-${nonce}'; ` + csp
+
+        response.set("Content-Security-Policy", csp);
+
+        response.render("game.ejs", { nonce });
     });
 
     router.post("/api/scores", async (request, response) => {
@@ -38,7 +50,7 @@ module.exports = (params) => {
     });
 
 
-    router.use("/leaderboard", leaderboardRoute());
+    router.use("/leaderboard", leaderboardRoute({ highscoreService }));
 
     return router;
 }

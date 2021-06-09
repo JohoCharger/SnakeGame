@@ -9,7 +9,10 @@ const app = express();
 
 const PORT = 3000;
 
-const highscoreService = new HighscoreService("highscores.json");
+const highscoreService = new HighscoreService("data/highscores.json");
+
+app.set("views", path.join(__dirname, "./views"))
+app.set("view engine", "ejs");
 
 app.use(helmet());
 app.use(express.static(path.join(__dirname, "./static")));

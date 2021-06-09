@@ -17,57 +17,52 @@
 			<div class="row leader">
 				<div class="col-12 leaderboard-col">
 					<div class="leaderboard-item">
-						<div class="leader-score">225</div>
+						<div class="leader-score"><%= scores[0].score %></div>
 						<div class="leader-name-wrapper">
 							<div class="leader-name">
-								It's the longest name possible
+								<%= scores[0].name %>
 							</div>
 						</div>
 						<div class="leader-message-wrapper">
 							<div class="leader-message">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-								incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+								<%= scores[0].message %>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row not-leader">
+			<% if (scores.length > 1) { %>
+				<div class="row not-leader">
 				<div class="col-md-6 col-sm-12 leaderboard-col">
-					<div class="leaderboard-item">
-						<div class="not-leader-score">225</div>
-						<div class="not-leader-name-wrapper">
-							<div class="not-leader-name">
-								It's the longest name possible
-							</div>
-						</div>
-						<div class="not-leader-message-wrapper">
-							<div class="not-leader-message">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-								incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-							</div>
-						</div>
-					</div>
+					<%- include('./partials/highscore', {score: scores[1]}); %>
 				</div>
+				<% if (scores.length > 2) {%>
 				<div class="col-md-6 col-sm-12 leaderboard-col">
-					<div class="leaderboard-item">
-					</div>
+					<%- include('./partials/highscore', {score: scores[2]}); %>
 				</div>
+				<% } %>
 			</div>
-			<div class="row not-leader">
-				<div class="col-md-6 col-sm-12 leaderboard-col">
-					<div class="leaderboard-item">
-
+			<% } %>
+			<% if (scores.length > 3) { %>
+				<div class="row not-leader">
+					<div class="col-md-6 col-sm-12 leaderboard-col">
+						<%- include('./partials/highscore', {score: scores[3]}); %>
 					</div>
+					<% if (scores.length > 4) {%>
+						<div class="col-md-6 col-sm-12 leaderboard-col">
+							<%- include('./partials/highscore', {score: scores[4]}); %>
+						</div>
+					<% } %>
 				</div>
-				<div class="col-md-6 col-sm-12 leaderboard-col">
-					<div class="leaderboard-item">
-
-					</div>
-				</div>
-			</div>
+			<% } %>
 		</div>
 	</div>
+	<button id="play-button" class="play-button">Play</button>
+	<script type="text/javascript" nonce="<%= nonce %>" defer>
+		document.getElementById("play-button").onclick = function gotoGame() {
+			window.location.href = "../";
+		}
+	</script>
 </div>
 </body>
 </html>

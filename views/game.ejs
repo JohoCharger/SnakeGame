@@ -24,6 +24,12 @@
 		<canvas id="game-canvas"></canvas>
 	</div>
 </div>
+	<button id="leaderboard-button" class="leaderboard-button">Leaderboard</button>
+	<script type="text/javascript" nonce="<%= nonce %>" defer>
+		document.getElementById("leaderboard-button").onclick = function gotoLeaderboard() {
+			window.location.href = "/leaderboard";
+		}
+	</script>
 <template id="instructions-template">
 	<p>Move using WASD or the arrow keys</p>
 	<p>Swipe controls are not supported yet.</p>

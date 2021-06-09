@@ -38,6 +38,7 @@
 .restart-button {
     padding: 2vh 4vh;
     margin: 2vh;
+    color: var(--border-color);
 }
 
 #game-over-text, #highscore-text {
@@ -59,5 +60,21 @@
 }
 
 .submit-button {
-padding: 2vh 4vh;
+    padding: 2vh 4vh;
+    color: var(--border-color);
+}
+
+.leaderboard-button {
+    position: absolute;
+    bottom: 0;
+    padding: 1vw 3vw;
+    margin-bottom: 5vw;
+    transform: translateX(-50%);
+    border: var(--border-color) 2px solid;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #555;
+    background: #ccc;
+    left: 50%;
+    font-size: 2vh;
+    color: var(--border-color);
 }

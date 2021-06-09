@@ -21,6 +21,9 @@ class HighscoreService {
 
     async setNewHighscore(highscore) {
         const data = await this.getData();
+        if (data.length === 0) {
+            data.splice(0, 0, highscore);
+        }
         for (let i = 0; i < data.length; i++) {
             if (highscore.score > data[i].score) {
                 data.splice(i, 0, highscore);
