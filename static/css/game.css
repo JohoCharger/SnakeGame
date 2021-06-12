@@ -78,3 +78,8 @@
     font-size: 2vh;
     color: var(--border-color);
 }
+
+#bad-name-text,#bad-message-text {
+    color: red;
+    display: none;
+}

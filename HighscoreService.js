@@ -23,11 +23,12 @@ class HighscoreService {
         const data = await this.getData();
         if (data.length === 0) {
             data.splice(0, 0, highscore);
-        }
-        for (let i = 0; i < data.length; i++) {
-            if (highscore.score > data[i].score) {
-                data.splice(i, 0, highscore);
-                break;
+        } else {
+            for (let i = 0; i < 5; i++) {
+                if (data.length === i || highscore.score > data[i].score) {
+                    data.splice(i, 0, highscore);
+                    break;
+                }
             }
         }
         if (data.length > 5) data.pop();

@@ -2,17 +2,6 @@ const scoreCounter = document.querySelector(".score-counter"); //TODO: Color sch
 const messageBox = document.querySelector(".message-box");
 
 let game;
-let keyboardListener;
-
-function bindKeyboard() {
-    keyboardListener = window.addEventListener("keydown", event => {
-        game.handleInput(event);
-    });
-}
-
-function unbindKeyboard() {
-    window.removeEventListener("keydown", keyboardListener);
-}
 
 let lastTime = 0;
 let accumulator = 0;
@@ -38,8 +27,6 @@ function run(time=performance.now()) {
 }
 
 function gameOver() {
-    unbindKeyboard();
-
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
@@ -62,6 +49,31 @@ function gameOver() {
     xhr.send(`score=${game.getScore()}`);
 }
 
+function submitInfo() {
+    const infoForm = document.getElementById("info-form");
+    const name = infoForm.elements["name"].value;
+    const message = infoForm.elements["message"].value;
+    const badName = document.getElementById("bad-name-text");
+    const badMessage = document.getElementById("bad-message-text");
+
+    badName.style.display = "none";
+    badMessage.style.display = "none";
+
+    let errors = false;
+    if (name.length < 3) {
+        badName.style.display = "block";
+        errors = true;
+    }
+    if (message.length < 5) {
+        badMessage.style.display = "block";
+        errors = true;
+    }
+
+    if (!errors) {
+        infoForm.submit();
+    }
+}
+
 function firstKeystrokeListener(event) {
     let code = event.code;
     if (code !== "ArrowUp" &&
@@ -76,7 +88,7 @@ function firstKeystrokeListener(event) {
 
     hideMessageBox();
     window.removeEventListener("keydown", firstKeystrokeListener);
-    bindKeyboard();
+    window.addEventListener("keydown", e => { game.handleInput(e); });
     game.handleInput(event);
     game.running = true;
     lastTime = performance.now();

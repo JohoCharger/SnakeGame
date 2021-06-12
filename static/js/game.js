@@ -180,7 +180,7 @@ class Game {
                     let selected = positions[Math.floor(Math.random() * positions.length)];
                     this.x = selected.x;
                     this.y = selected.y;
-                });
+                }); //WTF ??? TODO: CHECK WTF IS HAPPENING HERE
             }
 
         }
@@ -192,7 +192,7 @@ class Game {
     }
 
     handleInput(event) {
-        this.snake.handleInput(event.code)
+        this.snake.handleInput(event.code);
     }
 
     update(deltaTime) {
