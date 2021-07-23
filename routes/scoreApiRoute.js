@@ -28,12 +28,10 @@ module.exports = (params) => {
         check("name")
             .trim()
             .isLength({ min: 3, max: 30 })
-            .escape()
             .withMessage("Name is invalid"),
         check("message")
             .trim()
             .isLength({ min: 3, max: 150 })
-            .escape()
             .withMessage("message is invalid"),
         check("score")
             .trim()

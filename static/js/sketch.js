@@ -1,52 +1,37 @@
 const scoreCounter = document.querySelector(".score-counter"); //TODO: Color scheme??
 const messageBox = document.querySelector(".message-box");
 
-let game;
+const canvas = document.getElementById("game-canvas");
+const context = canvas.getContext("2d");
 
-let lastTime = 0;
-let accumulator = 0;
-function run(time=performance.now()) {
-    const deltaTime = time - lastTime;
-    lastTime = time;
-    if (game.running) {
-        accumulator += deltaTime;
-        if (accumulator >= Config.frameTime) {
-            while (accumulator >= Config.frameTime && game.running) {
-                accumulator -= Config.frameTime;
-                game.update(deltaTime);
-            }
-            scoreCounter.textContent = String(game.getScore());
-            game.draw();
-        }
-    } else {
-        gameOver();
-        return;
-    }
+const socket = io();
 
-    requestAnimationFrame(run);
-}
+let Config = null;
+let textures = null;
 
-function gameOver() {
+function gameOver(score) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             if (xhr.status === 204) {
                 setMessageBoxContents("#game-over-template");
                 messageBox.querySelector("#game-over-score-display")
-                    .textContent = `Final score: ${game.getScore()}`;
-                messageBox.querySelector(".restart-button").onclick = start;
+                    .textContent = `Final score: ${score}`;
+                messageBox.querySelector(".restart-button").onclick = function() {
+                    window.location.reload();
+                };
 
                 showMessageBox();
             } else if (xhr.status === 200) {
                 setMessageBoxContents("#highscore-submit-template");
-                messageBox.querySelector("#score").value = game.getScore();
+                messageBox.querySelector("#score").value = score;
                 showMessageBox();
             }
         }
     }
     xhr.open("POST", "/api/scores", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(`score=${game.getScore()}`);
+    xhr.send(`score=${score}`);
 }
 
 function submitInfo() {
@@ -74,27 +59,6 @@ function submitInfo() {
     }
 }
 
-function firstKeystrokeListener(event) {
-    let code = event.code;
-    if (code !== "ArrowUp" &&
-        code !== "ArrowDown" &&
-        code !== "ArrowLeft" &&
-        code !== "ArrowRight" &&
-        code !== "KeyW" &&
-        code !== "KeyS" &&
-        code !== "KeyA" &&
-        code !== "KeyD"
-    ) return;
-
-    hideMessageBox();
-    window.removeEventListener("keydown", firstKeystrokeListener);
-    window.addEventListener("keydown", e => { game.handleInput(e); });
-    game.handleInput(event);
-    game.running = true;
-    lastTime = performance.now();
-    run();
-}
-
 function hideMessageBox() {
     messageBox.style.display = "none";
 }
@@ -109,14 +73,46 @@ function setMessageBoxContents(templateID) {
     messageBox.appendChild(templateContents.content.cloneNode(true));
 }
 
-function start() {
-    game = new Game();
-    game.initialize();
+socket.on("game_config", config => {
+    Config = JSON.parse(config);
+    canvas.width = Config.tileCount * Config.tileSize;
+    canvas.height = Config.tileCount * Config.tileSize;
 
+    textures = createTextures(Config);
+    textures.setContext(context);
+
+    textures.drawBackground();
+    socket.emit("get_game_state");
+});
+
+socket.on("game_state", state => {
+    const gameState = JSON.parse(state);
+    textures.drawBackground()
+    textures.drawApple(gameState.apple);
+    textures.drawSnake(gameState.snake);
+    scoreCounter.textContent = gameState.snake.length;
+});
+
+socket.on("game_over", score => {
+    gameOver(score);
+});
+
+socket.on("display_message", message => {
+    if (message) {
+        showMessageBox();
+        setMessageBoxContents("#message-display-template");
+        document.querySelector("#message-display").innerHTML = message;
+    } else {
+        hideMessageBox();
+    }
+});
+function start() {
+    socket.emit("get_game_config");
+    window.addEventListener("keydown", e => {
+        socket.emit("game_input", e.code);
+    })
     setMessageBoxContents("#instructions-template");
     showMessageBox();
-    window.addEventListener("keydown", firstKeystrokeListener);
-
 }
 
 window.onload = start;

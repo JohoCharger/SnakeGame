@@ -1,12 +1,10 @@
-class Snake {
-    constructor(game, x, y) {
-        this.game = game;
-        this.vel = {x: 0, y: 0};
+module.exports = class Snake {
+    constructor(x, y) {
+        this.vel = {x: 0, y: -1};
         this.velQueue = [];
         this.pos = {x: x, y: y};
-        this.trueLength = 5; //TODO: More descriptive name??
+        this.trueLength = 5;
         this.tail = [];
-
 
         this.velToTexID = {
             "-10-10": 5,
@@ -30,8 +28,11 @@ class Snake {
     }
 
     update() {
-        let lastVel = this.game.toVector(this.vel);
-        if (this.velQueue.length) this.vel = this.game.toVector(this.velQueue.shift());
+        let lastVel = { x: this.vel.x, y: this.vel.y };
+        if (this.velQueue.length) {
+            const nextVel = this.velQueue.shift();
+            this.vel = { x: nextVel.x, y: nextVel.y };
+        }
 
         let a = String(this.vel.x) + String(this.vel.y) + String(lastVel.x) + String(lastVel.y);
         let textureID = this.velToTexID[a];
@@ -65,46 +66,17 @@ class Snake {
 
     queueInput(x, y) {
         if (this.vel.x === 0 && this.vel.y === 0) {
-            this.velQueue.push(this.game.toVector(x, y));
+            this.velQueue.push({ x: x, y: y });
             return;
         }
         if (this.velQueue.length === 0) {
             if (x === this.vel.x || y === this.vel.y)
                 return;
-            else this.velQueue.push(this.game.toVector(x, y));
+            else this.velQueue.push({ x: x, y: y });
         }
         let lastInput = this.velQueue[this.velQueue.length - 1];
         if (x === lastInput.x || y === lastInput.y) return;
-        this.velQueue.push(this.game.toVector(x, y));
-    }
-
-    draw() {
-        let headTexture = 4;
-        if (this.vel.y === -1) {
-            headTexture = 0;
-        } else if (this.vel.x === 1) {
-            headTexture = 1;
-        } else if (this.vel.y === 1) {
-            headTexture = 2;
-        } else if (this.vel.x === -1) {
-            headTexture = 3;
-        } else if (this.vel.x === 0 && this.vel.y === 0) {
-            headTexture = 0;
-        }
-
-        this.game.context.drawImage(
-            this.game.headTextures[headTexture],
-            this.pos.x * Config.tileSize,
-            this.pos.y * Config.tileSize
-        );
-
-        this.tail.forEach(tailPiece => {
-            this.game.context.drawImage(
-                this.game.tailTextures[tailPiece.textureID],
-                tailPiece.x * Config.tileSize,
-                tailPiece.y * Config.tileSize
-            );
-        });
+        this.velQueue.push({ x: x, y: y });
     }
 
     headCollides(x, y) {
@@ -134,5 +106,14 @@ class Snake {
 
     grow() {
         this.trueLength++;
+    }
+
+    toString() {
+        return {
+            tail: this.tail,
+            pos: this.pos,
+            vel: this.vel,
+            length: this.trueLength
+        }
     }
 }
