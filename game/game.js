@@ -1,10 +1,11 @@
 const Snake = require("./snake");
 
 module.exports = class Game {
-    constructor(socket) {
+    constructor(socket, highscoreService) {
         this.running = false;
         this.shouldQuit = false;
         this.playerReady = false;
+        this.highscoreService = highscoreService;
         this.snake = new Snake(7, 13);
         this.apple = {
             x: 0,
@@ -45,10 +46,16 @@ module.exports = class Game {
 
         this.socket.on("disconnect", () => {
             this.shouldQuit = true;
+        });
+
+        this.socket.on("player_info", info => {
+            info.score = this.snake.trueLength.toString(); //TODO: VALIDATE ONE MORE TIME
+            this.highscoreService.setNewHighscore(info);
+            this.socket.disconnect();
         })
     }
 
-    update() {
+    async update() {
         if (!this.running) {
             return;
         }
@@ -56,7 +63,7 @@ module.exports = class Game {
         this.snake.update();
         if (this.snake.collidesBorderOrSelf()) {
             this.running = false;
-            this.shouldQuit = true;
+            await this.gameOver();
         }
         if (this.snake.headCollides(this.apple.x, this.apple.y)) {
             this.snake.grow();
@@ -82,8 +89,24 @@ module.exports = class Game {
         }, 4000);
     }
 
-    gameOver() {
-        this.socket.emit("game_over", this.snake.trueLength);
+    async gameOver() {
+        const highscores = await this.highscoreService.getData();
+        const score = this.snake.trueLength;
+
+
+        if (highscores.length < 5) {
+            this.socket.emit("game_over", {podium: true, score: this.snake.trueLength});
+            return
+        }
+
+        for (let i = 0; i < highscores.length; i++) {
+            if (score > parseInt(highscores[i].score)) {
+                this.socket.emit("game_over", {podium: true, score: this.snake.trueLength});
+                return;
+            }
+        }
+
+        this.socket.emit("game_over", {podium: false, score: this.snake.trueLength});
     }
 
     toString() {

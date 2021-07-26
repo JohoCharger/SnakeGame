@@ -17,7 +17,6 @@ const io = new Server(server);
 function updateGames() {
     games.forEach((game, i) => {
         if (game.shouldQuit) {
-            game.gameOver();
             games.splice(i, 1);
             return;
         }
@@ -28,10 +27,12 @@ function updateGames() {
 const games = [];
 Config.setFPS(7);
 
+const highscoreService = new HighscoreService("data/highscores.json");
+
 setInterval(updateGames, Config.frameTime);
 
 io.on("connection", socket => {
-    games.push(new Game(socket));
+    games.push(new Game(socket, highscoreService));
 
     socket.on("get_game_config", () => {
         socket.emit("game_config", JSON.stringify({
@@ -46,8 +47,6 @@ io.on("connection", socket => {
 });
 
 const PORT = 3000;
-
-const highscoreService = new HighscoreService("data/highscores.json");
 
 app.set("views", path.join(__dirname, "./views"))
 app.set("view engine", "ejs");

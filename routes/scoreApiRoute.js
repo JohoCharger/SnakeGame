@@ -32,7 +32,7 @@ module.exports = (params) => {
         check("message")
             .trim()
             .isLength({ min: 3, max: 150 })
-            .withMessage("message is invalid"),
+            .withMessage("Message is invalid"),
         check("score")
             .trim()
             .isLength({ min: 1, max: 3 })

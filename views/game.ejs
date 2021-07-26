@@ -59,7 +59,8 @@
 
             <input class="submit-button" type="button" value="Submit" id="info-submit-button">
             <script type="text/javascript" nonce="<%= nonce %>">
-                document.getElementById("info-submit-button").onclick = function submitForm() {
+                document.getElementById("info-submit-button").onclick = function submitForm(e) {
+                    e.preventDefault();
                     submitInfo();
                 }
             </script>

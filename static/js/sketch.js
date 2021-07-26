@@ -10,28 +10,19 @@ let Config = null;
 let textures = null;
 
 function gameOver(score) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 204) {
-                setMessageBoxContents("#game-over-template");
-                messageBox.querySelector("#game-over-score-display")
-                    .textContent = `Final score: ${score}`;
-                messageBox.querySelector(".restart-button").onclick = function() {
-                    window.location.reload();
-                };
+    setMessageBoxContents("#game-over-template");
+    messageBox.querySelector("#game-over-score-display")
+        .textContent = `Final score: ${score}`;
+    messageBox.querySelector(".restart-button").onclick = function() {
+        window.location.reload();
+    };
+    showMessageBox();
+}
 
-                showMessageBox();
-            } else if (xhr.status === 200) {
-                setMessageBoxContents("#highscore-submit-template");
-                messageBox.querySelector("#score").value = score;
-                showMessageBox();
-            }
-        }
-    }
-    xhr.open("POST", "/api/scores", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(`score=${score}`);
+function getPlayerInfo(score) {
+    setMessageBoxContents("#highscore-submit-template");
+    messageBox.querySelector("#score").value = score;
+    showMessageBox();
 }
 
 function submitInfo() {
@@ -55,7 +46,8 @@ function submitInfo() {
     }
 
     if (!errors) {
-        infoForm.submit();
+        socket.emit("player_info", { name: name, message: message });
+        window.location = "/leaderboards"
     }
 }
 
@@ -93,8 +85,12 @@ socket.on("game_state", state => {
     scoreCounter.textContent = gameState.snake.length;
 });
 
-socket.on("game_over", score => {
-    gameOver(score);
+socket.on("game_over", gameOverStatus => {
+    if (gameOverStatus.podium) {
+        getPlayerInfo(gameOverStatus.score);
+    } else {
+        gameOver(gameOverStatus.score);
+    }
 });
 
 socket.on("display_message", message => {
