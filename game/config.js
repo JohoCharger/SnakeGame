@@ -1,7 +1,7 @@
 module.exports = Config = {
     tileSize: 32,
     tileCount: 15,
-    snakeGap: 5, //TODO: More descriptive name??
+    snakeGap: 5,
     snakeColor: "#CEA4DB",
     bgColor1: "#9ADBC1",
     bgColor2: "#8EDB91",

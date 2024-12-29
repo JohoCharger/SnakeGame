@@ -64,6 +64,18 @@ module.exports = class Snake {
         }
     }
 
+    setVel(code) {
+        if (code === "ArrowLeft" || code === "KeyA") {
+            this.vel = {x: -1, y: 0};
+        } else if (code === "ArrowRight" || code === "KeyD") {
+            this.vel = {x: 1, y: 0};
+        } else if (code === "ArrowUp" || code === "KeyW") {
+            this.vel = {x: 0, y: -1};
+        } else if (code === "ArrowDown" || code === "KeyS") {
+            this.vel = {x: 0, y: 1};
+        }
+    }
+
     queueInput(x, y) {
         if (this.vel.x === 0 && this.vel.y === 0) {
             this.velQueue.push({ x: x, y: y });

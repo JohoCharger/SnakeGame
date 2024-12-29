@@ -1,4 +1,4 @@
-const scoreCounter = document.querySelector(".score-counter"); //TODO: Color scheme??
+const scoreCounter = document.querySelector(".score-counter");
 const messageBox = document.querySelector(".message-box");
 
 const canvas = document.getElementById("game-canvas");
@@ -47,7 +47,7 @@ function submitInfo() {
 
     if (!errors) {
         socket.emit("player_info", { name: name, message: message });
-        window.location = "/leaderboards"
+        window.location = "/leaderboard"
     }
 }
 

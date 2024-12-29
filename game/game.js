@@ -34,11 +34,23 @@ module.exports = class Game {
         this.socket = socket;
         this.socket.on("game_input", code => {
             if (!this.running && !this.playerReady) {
-                this.playerReady = true;
-                this.start();
+                if (code === "KeyW" ||
+                    code === "KeyA" ||
+                    code === "KeyD" ||
+                    code === "KeyS" ||
+                    code === "ArrowRight" ||
+                    code === "ArrowLeft" ||
+                    code === "ArrowUp" ||
+                    code === "ArrowDown" ) {
+                    this.playerReady = true;
+                    this.start();
+                }
             }
-
-            this.snake.handleInput(code);
+            if (this.running) {
+                this.snake.handleInput(code);
+            } else {
+                this.snake.setVel(code);
+            }
         });
         this.socket.on("get_game_state", () => {
             this.socket.emit("game_state", JSON.stringify(this.toString()));
@@ -49,7 +61,11 @@ module.exports = class Game {
         });
 
         this.socket.on("player_info", info => {
-            info.score = this.snake.trueLength.toString(); //TODO: VALIDATE ONE MORE TIME
+            info.score = this.snake.trueLength.toString();
+            if (info.name.length < 3 || info.message.length < 5) {
+                this.socket.disconnect();
+                return;
+            }
             this.highscoreService.setNewHighscore(info);
             this.socket.disconnect();
         })

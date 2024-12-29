@@ -1,5 +1,10 @@
 [
     {
+        "name": "yes",
+        "message": "yeete",
+        "score": "27"
+    },
+    {
         "name": "example name",
         "message": "example message",
         "score": "20"
@@ -18,10 +23,5 @@
         "name": "example name 4",
         "message": "example message 4",
         "score": "10"
-    },
-    {
-        "name": "example name 5",
-        "message": "example message 5",
-        "score": "8"
     }
 ]
